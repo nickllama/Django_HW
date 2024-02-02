@@ -1,11 +1,39 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from .forms import FeedbackForm
+from .models import Category, Product
+
 
 def index(request):
-    return render(request, 'catalog/index.html')
+    context = {
+        'object_list': Product.objects.all(),
+        'title': 'Интернет-Магазин Электроники'
+    }
+    return render(request, 'catalog/index.html', context)
+
+def categories(request):
+    context = {
+        'object_list': Category.objects.all(),
+        'title': 'Категории товаров'
+    }
+    return render(request, 'catalog/categories.html', context)
+
+def category_products(request, pk):
+    category_item = Category.objects.get(pk=pk)
+    context = {
+        'object_list': Product.objects.filter(product_category_id=pk),
+        'title': f'Все товары категории: {category_item.category_name}'
+    }
+    return render(request, 'catalog/Products.html', context)
+
+
+def product_detail(request, product_id):
+    product = Product.objects.get(pk=product_id)
+    return render(request, 'catalog/product_detail.html', {'product': product})
+
 
 def contacts(request):
     return render(request, 'catalog/contacts.html')
+
 
 def FeedbackForm(request):
     if request.method == 'POST':
@@ -20,5 +48,3 @@ def FeedbackForm(request):
         form = FeedbackForm()
 
     return render(request, 'contacts.html', {'form': form})
-
-
