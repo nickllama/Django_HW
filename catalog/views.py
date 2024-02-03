@@ -8,7 +8,9 @@ def index(request):
         'object_list': Product.objects.all(),
         'title': 'Интернет-Магазин Электроники'
     }
+    print(context)
     return render(request, 'catalog/index.html', context)
+
 
 def categories(request):
     context = {
@@ -17,10 +19,21 @@ def categories(request):
     }
     return render(request, 'catalog/categories.html', context)
 
-def category_products(request, pk):
-    category_item = Category.objects.get(pk=pk)
+
+# def category_products(request, category_id):
+#     category_item = Category.objects.get(pk=category_id)
+#
+#     context = {
+#         'object_list': Product.objects.filter(category_products=category_item),
+#         'title': f'Все товары категории: {category_item.category_name}'
+#     }
+#     return render(request, 'catalog/Products.html', context)
+
+def category_products(request, category_id):
+    category_item = Category.objects.get(pk=category_id)
+
     context = {
-        'object_list': Product.objects.filter(product_category_id=pk),
+        'object_list': Product.objects.filter(category=category_item),
         'title': f'Все товары категории: {category_item.category_name}'
     }
     return render(request, 'catalog/Products.html', context)

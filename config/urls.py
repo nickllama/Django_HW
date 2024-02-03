@@ -47,20 +47,16 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 
-from catalog.views import product_detail, categories, category_products, index
+from catalog.apps import CatalogConfig
+from catalog.views import index
 
-app_name = 'catalog'
+app_name = CatalogConfig.name
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', index, name='index'),
-    path('categories/', categories, name='categories'),
-    # path('catalog/', include('catalog.urls', namespace='catalog')),
-    path('catalog/<int:pk>/', category_products, name='category_products'),
-    path('catalog/', include('catalog.urls')),
-    path('product/<int:product_id>/', product_detail, name='product_detail'),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+                  path('admin/', admin.site.urls),
+                  path('', index, name='index'),
+                  path('catalog/', include('catalog.urls')),
+              ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
