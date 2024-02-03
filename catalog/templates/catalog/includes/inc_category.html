@@ -7,8 +7,8 @@
                     {#                    <a href="{% url 'catalog:category_products' object.category_products.id %}" type="button"#}
                     {#                       class="btn btn-sm btn-outline-secondary">О#}
                     {#                        категории {{ object.product_category.category_name }} </a>#}
-                    <a href="{% url 'catalog:product_detail' object.pk %}" type="button"
-                       class="btn btn-sm btn-outline-secondary">Подробней о {{ object.product_name }}</a>
+                    <a href="{% url 'catalog:category_products' object.pk %}" type="button"
+                       class="btn btn-sm btn-outline-secondary">Посмотреть все товары категории</a>
                 </div>
             </div>
         </div>
