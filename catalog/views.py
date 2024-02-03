@@ -20,23 +20,24 @@ def categories(request):
     return render(request, 'catalog/categories.html', context)
 
 
-# def category_products(request, category_id):
-#     category_item = Category.objects.get(pk=category_id)
-#
-#     context = {
-#         'object_list': Product.objects.filter(category_products=category_item),
-#         'title': f'Все товары категории: {category_item.category_name}'
-#     }
-#     return render(request, 'catalog/Products.html', context)
-
 def category_products(request, category_id):
     category_item = Category.objects.get(pk=category_id)
 
     context = {
-        'object_list': Product.objects.filter(category=category_item),
+        'object_list': Product.objects.filter(category_products=category_item),
         'title': f'Все товары категории: {category_item.category_name}'
     }
     return render(request, 'catalog/Products.html', context)
+
+
+# def category_products(request, category_id):
+#     category_item = Category.objects.get(pk=category_id)
+#
+#     context = {
+#         'object_list': Product.objects.filter(category=category_item),
+#         'title': f'Все товары категории: {category_item.category_name}'
+#     }
+#     return render(request, 'catalog/Products.html', context)
 
 
 def product_detail(request, product_id):

@@ -4,9 +4,9 @@
             <p class="card-text">{{ object.category_name|title }}</p>
             <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group" style="display: flex; flex-direction: column">
-                    <a href="{% url 'catalog:category_products' object.category_products.id %}" type="button"
-                       class="btn btn-sm btn-outline-secondary">О
-                        категории {{ object.product_category.category_name }} </a>
+                    {#                    <a href="{% url 'catalog:category_products' object.category_products.id %}" type="button"#}
+                    {#                       class="btn btn-sm btn-outline-secondary">О#}
+                    {#                        категории {{ object.product_category.category_name }} </a>#}
                     <a href="{% url 'catalog:product_detail' object.pk %}" type="button"
                        class="btn btn-sm btn-outline-secondary">Подробней о {{ object.product_name }}</a>
                 </div>
