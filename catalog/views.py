@@ -8,7 +8,6 @@ def index(request):
         'object_list': Product.objects.all(),
         'title': 'Интернет-Магазин Электроники'
     }
-    print(context)
     return render(request, 'catalog/index.html', context)
 
 
@@ -27,6 +26,7 @@ def category_products(request, category_id):
         'object_list': Product.objects.filter(product_category=category_item),
         'title': f'Все товары категории: {category_item.category_name}'
     }
+    print(context)
     return render(request, 'catalog/Products.html', context)
 
 
