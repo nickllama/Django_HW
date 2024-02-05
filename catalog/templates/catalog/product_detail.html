@@ -1,23 +1,23 @@
 {% extends 'catalog/base.html' %}
 
 {% block content %}
-  <div class="row">
-    {% for object in object_list %}
-        {% include 'catalog/includes/inc_category.html' %}
-   {% endfor %}
-  </div>
-      <div class="container">
     <div class="row">
-        <div class="col-md-6">
-            <img src="{{ product.product_image.url }}" alt="{{ product.product_name }}" class="img-fluid">
-        </div>
-        <div class="col-md-6">
-            <h1>{{ product.product_name }}</h1>
-            <p>Цена: {{ product.product_price|title }}</p>
-            <p>Описание: {{ product.product_description }}</p>
-            <!-- Другая информация о товаре... -->
+        {% for object in object_list %}
+            {% include 'catalog/includes/inc_category.html' %}
+        {% endfor %}
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <img src="{{ product.product_image.url }}" alt="{{ product.product_name }}" class="img-fluid">
+            </div>
+            <div class="col-md-6">
+                <h1>{{ product.product_name }}</h1>
+                <p>Цена: {{ product.product_price|title }}</p>
+                <p>Описание: {{ product.product_description }}</p>
+                <!-- Другая информация о товаре... -->
+            </div>
         </div>
     </div>
-</div>
 
 {% endblock %}

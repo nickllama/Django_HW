@@ -1,4 +1,5 @@
 {% extends 'catalog/base.html' %}
+{% load my_tags %}
 
 {% block content %}
     <div class="row">
@@ -6,8 +7,9 @@
             <div class="col-md-4">
                 <div class="card mb-4 box-shadow">
                     <div class="image-container" style="height: 200px; overflow: hidden;">
-                        <img class="card-img-top" src="/media/{{ object.product_image }}"
-                             style="width: 100%; height: auto;">
+                        {#                        <img class="card-img-top" src="/media/{{ object.product_image }}"#}
+                        <img src="{{ object.product_image|mediapath }}"/>
+                        style="width: 100%; height: auto;">
                     </div>
                     <div class="card-body">
                         <h5 class="card-title">{{ object.product_name }}</h5>
