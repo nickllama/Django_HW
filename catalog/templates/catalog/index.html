@@ -15,7 +15,7 @@
                         <h5 class="card-title">{{ object.product_name }}</h5>
                         <p class="card-text">{{ object.product_price|title }}</p>
                         <div class="btn-group flex-column">
-                            <a href="{% url 'catalog:category_products' object.pk %}" type="button"
+                            <a href="{% url 'catalog:category_products' object.product_category_id %}" type="button"
                                class="btn btn-sm btn-outline-secondary">Посмотреть все товары категории</a>
                             <a href="{% url 'catalog:product_detail' product_id=object.pk %}" type="button"
                                class="btn btn-sm btn-outline-secondary">Открыть товар</a>
