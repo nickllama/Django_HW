@@ -17,7 +17,7 @@
                         <div class="btn-group flex-column">
                             <a href="{% url 'catalog:category_products' object.product_category_id %}" type="button"
                                class="btn btn-sm btn-outline-secondary">Посмотреть все товары категории</a>
-                            <a href="{% url 'catalog:product_detail' product_id=object.pk %}" type="button"
+                            <a href="{% url 'catalog:product_detail' object.pk %}" type="button"
                                class="btn btn-sm btn-outline-secondary">Открыть товар</a>
                         </div>
                     </div>
