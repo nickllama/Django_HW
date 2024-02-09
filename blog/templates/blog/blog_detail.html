@@ -1,0 +1,26 @@
+{% extends 'catalog/base.html' %}
+{% load my_tags %}
+
+{% block content %}
+    <div class="row">
+        {% for object in object_list %}
+            {% include 'catalog/includes/inc_category.html' %}
+        {% endfor %}
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <img src="{{ object.photo|mediapath }}" alt="{{ object.title }}" class="img-fluid">
+            </div>
+            <div class="col-md-6">
+                <h1>{{ object.title }}</h1>
+                <p>slug {{ object.slug }}</p>
+                <p>{{ object.body }}</p>
+                <p>Дата публикации: {{ object.created_at }}</p>
+                <p>Опубликовано {{ object.is_published }}</p>
+                <p>количество просмотров {{ object.views_count }}</p>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

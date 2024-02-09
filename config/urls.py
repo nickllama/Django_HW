@@ -14,12 +14,51 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+# from django.conf import settings
+# from django.conf.urls.static import static
+# from django.contrib import admin
+# from django.urls import path, include
+#
+# from catalog.views import product_detail, categories, category_products, index
+#
+# app_name = 'catalog'
+#
+#
+# urlpatterns = [
+#     path('admin/', admin.site.urls),
+#     path('', index, name='index'),
+#     path('categories/', categories, name='categories'),
+#     path('', include('catalog.urls', namespace='catalog')),
+#     path('catalog/<int:pk>', category_products, name='category_products'),
+#     path('product/<int:product_id>/', product_detail, name='product_detail'),
+#
+#
+#
+#
+# ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+#
+# if settings.DEBUG:
+#     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+# my_project/urls.py
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 
+from catalog.apps import CatalogConfig
+from catalog.views import index
+
+app_name = CatalogConfig.name
+
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('catalog.urls')),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+                  path('admin/', admin.site.urls),
+                  path('', index, name='index'),
+                  path('catalog/', include('catalog.urls', namespace='catalog')),
+                  # path('', include('catalog.urls', namespace='catalog')),
+                  path('blog/', include('blog.urls', namespace='blog')),
+              ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
