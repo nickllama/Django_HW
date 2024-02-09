@@ -3,22 +3,26 @@
 
 {% block content %}
     <div class="row">
+        <div class="col-md-12 mb-4">
+            <a class="btn btn-outline-secondary" href="{% url 'catalog:create_product' %}">Добавить товар</a>
+        </div>
         {% for object in object_list %}
             <div class="col-md-4">
                 <div class="card mb-4 box-shadow">
-                    <div class="image-container" style="height: 200px; overflow: hidden;">
-                        {#                        <img class="card-img-top" src="/media/{{ object.product_image }}"#}
-                        <img src="{{ object.product_image|mediapath }}"/>
-                        style="width: 100%; height: auto;">
+                    <div class="image-container">
+                        <img src="{{ object.product_image|mediapath }}" class="card-img-top"
+                             alt="{{ object.product_name }}">
                     </div>
                     <div class="card-body">
                         <h5 class="card-title">{{ object.product_name }}</h5>
                         <p class="card-text">{{ object.product_price|title }}</p>
                         <div class="btn-group flex-column">
-                            <a href="{% url 'catalog:category_products' object.product_category_id %}" type="button"
+                            <a href="{% url 'catalog:category_products' object.product_category_id %}"
                                class="btn btn-sm btn-outline-secondary">Посмотреть все товары категории</a>
-                            <a href="{% url 'catalog:product_detail' object.pk %}" type="button"
+                            <a href="{% url 'catalog:product_detail' object.pk %}"
                                class="btn btn-sm btn-outline-secondary">Открыть товар</a>
+                            <a href="{% url 'catalog:update_product' object.pk %}"
+                               class="btn btn-sm btn-outline-secondary">Редактировать</a>
                         </div>
                     </div>
                 </div>
@@ -26,3 +30,4 @@
         {% endfor %}
     </div>
 {% endblock %}
+
