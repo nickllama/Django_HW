@@ -39,6 +39,7 @@ class Version(models.Model):
     version_number = models.IntegerField(verbose_name='Номер версии')
     version_name = models.CharField(max_length=150, verbose_name='название версии')
     version_description = models.TextField(max_length=500, verbose_name='признак версии')
+    is_active = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.product_name} - {self.version_number}'

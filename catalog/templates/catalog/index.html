@@ -16,6 +16,12 @@
                     <div class="card-body">
                         <h5 class="card-title">{{ object.product_name }}</h5>
                         <p class="card-text">{{ object.product_price|title }}</p>
+                        {% if object.active_version %}
+                            <p>Активная версия: {{ object.active_version.name }}
+                                ({{ object.active_version.version_number }})</p>
+                        {% else %}
+                            <p>Нет активной версии</p>
+                        {% endif %}
                         <div class="btn-group flex-column">
                             <a href="{% url 'catalog:category_products' object.product_category_id %}"
                                class="btn btn-sm btn-outline-secondary">Посмотреть все товары категории</a>

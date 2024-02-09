@@ -16,6 +16,12 @@
                 <h1>{{ product.product_name }}</h1>
                 <p>Цена: {{ product.product_price|title }}</p>
                 <p>Описание: {{ product.product_description }}</p>
+                {% if object.active_version %}
+                    <p>Активная версия: {{ object.active_version.name }}
+                        ({{ object.active_version.version_number }})</p>
+                {% else %}
+                    <p>Нет активной версии</p>
+                {% endif %}
             </div>
         </div>
     </div>

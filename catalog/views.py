@@ -39,7 +39,23 @@ class ProductListView(ListView):
         context_data['category_pk']: category_item.pk
         context_data['title'] = f'Все товары категории: {category_item.category_name}'
 
+        for product in context_data['object_list']:
+            product.active_version = product.version_set.filter(is_active=True).first()
+
         return context_data
+
+    # def get_queryset(self):
+    #     queryset = super().get_queryset()
+    #     queryset = queryset.filter(product_category_id=self.kwargs.get('pk'))
+    #     return queryset
+    #
+    # def get_context_data(self, *args, **kwargs):
+    #     context_data = super().get_context_data(*args, **kwargs)
+    #
+    #     for product in context_data['object_list']:
+    #         product.active_version = product.version_set.filter(is_active=True).first()
+    #
+    #     return context_data
 
 
 class ProductCreateView(CreateView):
