@@ -48,13 +48,13 @@ from django.contrib import admin
 from django.urls import path, include
 
 from catalog.apps import CatalogConfig
-from catalog.views import index
+from catalog.views import IndexListView
 
 app_name = CatalogConfig.name
 
 urlpatterns = [
                   path('admin/', admin.site.urls),
-                  path('', index, name='index'),
+                  path('', IndexListView.as_view(), name='index'),
                   path('catalog/', include('catalog.urls', namespace='catalog')),
                   # path('', include('catalog.urls', namespace='catalog')),
                   path('blog/', include('blog.urls', namespace='blog')),
