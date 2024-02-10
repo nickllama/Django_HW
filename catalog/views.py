@@ -7,16 +7,32 @@ from .forms import ProductForm, VersionForm
 from .models import Category, Product, Version
 
 
-def index(request):
-    context = {
-        'object_list': Product.objects.all(),
-        'title': 'Интернет-Магазин Электроники'
-    }
-    return render(request, 'catalog/index.html', context)
+class IndexListView(ListView):
+    model = Product
+    template_name = 'catalog/index.html'
+    context_object_name = 'object_list'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Интернет-Магазин Электроники'
+
+        for product in context['object_list']:
+            product.active_version = product.version_set.filter(is_active=True).first()
+
+        return context
 
 
 class ProductDetailView(DetailView):
     model = Product
+
+    def get_context_data(self, *args, **kwargs):
+        context_data = super().get_context_data(*args, **kwargs)
+
+        product = self.object  # Получаем объект продукта из представления
+
+        product.active_version = product.version_set.filter(is_active=True).first()
+
+        return context_data
 
 
 class CategoryListView(ListView):
@@ -44,30 +60,17 @@ class ProductListView(ListView):
 
         return context_data
 
-    # def get_queryset(self):
-    #     queryset = super().get_queryset()
-    #     queryset = queryset.filter(product_category_id=self.kwargs.get('pk'))
-    #     return queryset
-    #
-    # def get_context_data(self, *args, **kwargs):
-    #     context_data = super().get_context_data(*args, **kwargs)
-    #
-    #     for product in context_data['object_list']:
-    #         product.active_version = product.version_set.filter(is_active=True).first()
-    #
-    #     return context_data
-
 
 class ProductCreateView(CreateView):
     model = Product
     form_class = ProductForm
-    success_url = reverse_lazy('catalog:index')
+    success_url = reverse_lazy('catalog:IndexListView')
 
 
 class ProductUpdateView(UpdateView):
     model = Product
     form_class = ProductForm
-    success_url = reverse_lazy('catalog:index')
+    success_url = reverse_lazy('catalog:IndexListView')
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
