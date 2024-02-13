@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 
 NULLABLE = {'blank': True, 'null': True}
@@ -24,6 +25,8 @@ class Product(models.Model):
     product_price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='цена за штуку')
     product_date_of_creation = models.DateField(auto_now_add=True)
     product_date_of_modification = models.DateField(auto_now=True)
+    product_owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, verbose_name='Владелец',
+                                      **NULLABLE)
 
     def __str__(self):
         return f'{self.product_name} - {self.product_price}'

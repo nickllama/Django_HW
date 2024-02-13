@@ -1,7 +1,8 @@
+from django.conf import settings
 from django.forms import inlineformset_factory
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView, UpdateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
 from .forms import ProductForm, VersionForm
 from .models import Category, Product, Version
@@ -42,6 +43,10 @@ class CategoryListView(ListView):
 
 class ProductListView(ListView):
     model = Product
+    extra_context = {
+        'title': "Каталог продуктов",
+        'current_user': settings.AUTH_USER_MODEL,
+    }
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -65,6 +70,12 @@ class ProductCreateView(CreateView):
     model = Product
     form_class = ProductForm
     success_url = reverse_lazy('catalog:IndexListView')
+
+    def form_valid(self, form):
+        self.object = form.save()
+        self.object.owner = self.request.user
+        self.object.save()
+        return super().form_valid(form)
 
 
 class ProductUpdateView(UpdateView):
@@ -92,3 +103,8 @@ class ProductUpdateView(UpdateView):
             formset.instance = self.object
             formset.save()
         return super().form_valid(form)
+
+
+class ProductDeleteView(DeleteView):
+    model = Product
+    success_url = reverse_lazy('catalog:IndexListView')

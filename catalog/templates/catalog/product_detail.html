@@ -19,6 +19,7 @@
                 {% if object.active_version %}
                     <p>Активная версия: {{ object.active_version.name }}
                         ({{ object.active_version.version_number }})</p>
+                    <span class="text-muted">{{ object.owner|default:"-" }}</span><br>
                 {% else %}
                     <p>Нет активной версии</p>
                 {% endif %}
