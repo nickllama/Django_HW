@@ -1,35 +1,15 @@
 import random
-
-from django.core.checks import messages
-from django.core.mail import send_mail
-from django.http import Http404
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy, reverse
-from django.utils import timezone
 from django.views import View
-from django.views.generic import CreateView, UpdateView
-from django.contrib.auth.decorators import login_required
+from django.views.generic import UpdateView, CreateView
+from django.core.mail import send_mail
+from django.conf import settings
+from django.contrib.auth import get_user_model
 
 from config import settings
 from users.forms import UserRegisterForm, UserUpdateForm, NewPasswordForm
 from users.models import User
-
-
-# class RegisterView(CreateView):
-#     model = User
-#     form_class = UserRegisterForm
-#     template_name = 'users/register.html'
-#     success_url = reverse_lazy('users:login')
-#
-#     def form_valid(self, form):
-#         new_user = form.save()
-#         send_mail(
-#             subject='Welcome to our service',
-#             message='Вы зарегистрировались в нашем сервисе!',
-#             from_email=settings.EMAIL_HOST_USER,
-#             recipient_list=[new_user.email]
-#         )
-#         return super().form_valid(form)
 
 
 class ProfileView(UpdateView):
@@ -41,63 +21,40 @@ class ProfileView(UpdateView):
         return self.request.user
 
 
-from django.contrib.sites.shortcuts import get_current_site
-from django.contrib.auth.tokens import default_token_generator
-from django.utils.encoding import force_bytes
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.core.mail import send_mail
-from django.conf import settings
-from django.contrib.auth import get_user_model
-from django.views.generic import CreateView
-
-
 class RegisterView(CreateView):
     model = get_user_model()
     form_class = UserRegisterForm
+    success_url = reverse_lazy('users:verify_email')
     template_name = 'users/register.html'
-    success_url = reverse_lazy('users:login')
 
-    def form_valid(self, form):
-        new_user = form.save(commit=False)
-        new_user.is_active = False  # Новый пользователь неактивен до подтверждения почты
-        new_user.save()
+    def form_valid(self, form: UserRegisterForm):
+        new_user = form.save()
 
-        # Отправка письма с подтверждением
-        current_site = get_current_site(self.request)
-        mail_subject = 'Activate your account'
-        message = self.render_email_message(new_user, current_site)
-        to_email = form.cleaned_data.get('email')
-        send_mail(mail_subject, message, settings.EMAIL_HOST_USER, [to_email])
-
+        send_mail(
+            subject='Подтвердите почту',
+            message=f'Вернитесь на сайт и введите код подтверждения регистрации: {new_user.verify_code}',
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=[new_user.email]
+        )
         return super().form_valid(form)
 
-    def render_email_message(self, user, current_site):
-        uid = urlsafe_base64_encode(force_bytes(user.pk))
-        token = default_token_generator.make_token(user)
-        return f"Please click the link below to verify your email address: \
-                http://{current_site.domain}/users/verify-email/{uid}/{token}/"
 
+class VerifyCodeView(View):
+    model = User
+    template_name = 'users/verify_email.html'
 
-class VerifyEmailView(View):
-    def get(self, request, uidb64, token):
-        try:
-            uid = urlsafe_base64_decode(uidb64).decode()
-            user_model = get_user_model()
-            user = user_model.objects.get(pk=uid)
-        except (TypeError, ValueError, OverflowError, user_model.DoesNotExist):
-            user = None
+    def get(self, request):
+        return render(request, self.template_name)
 
-        if user is not None and default_token_generator.check_token(user, token):
-            # Если пользователь найден и токен действителен, установите его статус email_verified в True и сохраните пользователя
-            user.is_active = True
+    def post(self, request, *args, **kwargs):
+        verify_code = request.POST.get('verify_code')
+        user = User.objects.filter(verify_code=verify_code).first()
+        if user:
+            user.is_verified = True
             user.save()
-            # Выполните вход пользователя
-            login(request, user)
-            # Перенаправьте пользователя на страницу успешной верификации
-            return redirect('/users/login')
-        else:
-            # Если токен недействителен, вы можете перенаправить пользователя на страницу с ошибкой или сделать что-то еще
-            raise Http404("/users/verify-email.html")
+            return redirect('users:login')
+
+        return redirect('users:verify_email')
 
 
 def reset_password(request):
@@ -119,4 +76,4 @@ def reset_password(request):
         context = {
             'form': form
         }
-        return render(request, 'users/new_password.html', context)
+        return render(request, 'users/register.html', context)
