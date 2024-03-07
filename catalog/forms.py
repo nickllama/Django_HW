@@ -13,7 +13,7 @@ class StyleFormMixin:
 class ProductForm(StyleFormMixin, forms.ModelForm):
     class Meta:
         model = Product
-        fields = '__all__'
+        fields = ['product_name', 'product_description', 'product_image', 'product_category', 'product_price']
 
     def clean_product_name(self):
         forbidden_words = ['казино', 'криптовалюта', 'крипта', 'биржа',

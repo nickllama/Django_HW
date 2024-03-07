@@ -76,4 +76,4 @@ def reset_password(request):
         context = {
             'form': form
         }
-        return render(request, 'users/register.html', context)
+        return render(request, 'users/new_password.html', context)
